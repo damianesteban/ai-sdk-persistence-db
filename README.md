@@ -4,10 +4,10 @@ This example demonstrates how to persist chat messages using Vercel AI SDK with 
 
 - AI SDK for streaming chat responses
 - Postgres for message storage
-- Drizzle ORM for database queries
+- Prisma for database queries
 - Next.js for the web application
 
-The chat messages are stored in a Postgres database using the schema defined in `schema.ts`. Each chat has an auto-incrementing ID and contains multiple messages with timestamps.
+The chat messages are stored in a Postgres database using the schema defined in `prisma/schema.prisma`. Each chat has an auto-generated ID and contains multiple messages with timestamps.
 
 ## Setup
 
@@ -51,7 +51,7 @@ This application uses a prefix-based approach for persisting messages with Postg
 
 The database uses three main tables with a prefix-based column naming convention:
 
-The schema can be found in [`lib/db/schema.ts`](lib/db/schema.ts).
+The schema can be found in [`prisma/schema.prisma`](prisma/schema.prisma).
 
 #### Tables:
 

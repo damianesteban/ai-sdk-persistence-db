@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Chat {
+  id       String    @id @default(cuid())
+  messages Message[]
+
+  @@map("chats")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  chatId    String   @map("chatId")
+  createdAt DateTime @default(now()) @map("createdAt")
+  role      String
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  parts     Part[]
+
+  @@index([chatId], name: "messages_chat_id_idx")
+  @@index([chatId, createdAt], name: "messages_chat_id_created_at_idx")
+  @@map("messages")
+}
+
+model Part {
+  id        String   @id @default(cuid())
+  messageId String   @map("messageId")
+  type      String
+  createdAt DateTime @default(now()) @map("createdAt")
+  order     Int      @default(0)
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  // Text fields
+  text_text String? @map("text_text") @db.Text
+
+  // Reasoning fields
+  reasoning_text String? @map("reasoning_text") @db.Text
+
+  // File fields
+  file_mediaType String? @map("file_mediaType")
+  file_filename  String? @map("file_filename")
+  file_url       String? @map("file_url")
+
+  // Source url fields
+  source_url_sourceId String? @map("source_url_sourceId")
+  source_url_url      String? @map("source_url_url")
+  source_url_title    String? @map("source_url_title")
+
+  // Source document fields
+  source_document_sourceId   String? @map("source_document_sourceId")
+  source_document_mediaType  String? @map("source_document_mediaType")
+  source_document_title      String? @map("source_document_title")
+  source_document_filename   String? @map("source_document_filename")
+
+  // Shared tool call columns
+  tool_toolCallId String? @map("tool_toolCallId")
+  tool_state      String? @map("tool_state")
+  tool_errorText  String? @map("tool_errorText")
+
+  // Tool inputs and outputs stored in separate cols
+  tool_getWeatherInformation_input  Json? @map("tool_getWeatherInformation_input")
+  tool_getWeatherInformation_output Json? @map("tool_getWeatherInformation_output")
+  tool_getLocation_input            Json? @map("tool_getLocation_input")
+  tool_getLocation_output           Json? @map("tool_getLocation_output")
+
+  // Data parts
+  data_weather_id          String? @default(cuid()) @map("data_weather_id")
+  data_weather_location    String? @map("data_weather_location")
+  data_weather_weather     String? @map("data_weather_weather")
+  data_weather_temperature Float?  @map("data_weather_temperature") @db.Real
+
+  providerMetadata Json? @map("providerMetadata")
+
+  @@index([messageId], name: "parts_message_id_idx")
+  @@index([messageId, order], name: "parts_message_id_order_idx")
+  @@map("parts")
+}
