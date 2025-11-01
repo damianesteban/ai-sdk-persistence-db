@@ -55,10 +55,10 @@ model Part {
   source_url_title    String? @map("source_url_title")
 
   // Source document fields
-  source_document_sourceId   String? @map("source_document_sourceId")
-  source_document_mediaType  String? @map("source_document_mediaType")
-  source_document_title      String? @map("source_document_title")
-  source_document_filename   String? @map("source_document_filename")
+  source_document_sourceId  String? @map("source_document_sourceId")
+  source_document_mediaType String? @map("source_document_mediaType")
+  source_document_title     String? @map("source_document_title")
+  source_document_filename  String? @map("source_document_filename")
 
   // Shared tool call columns
   tool_toolCallId String? @map("tool_toolCallId")
